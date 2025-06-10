@@ -64,6 +64,7 @@ app.use("/user", userRoutes);
 
 // 404 handler pour toutes les autres routes
 app.use((req, res) => {
+  console.warn(`[404] Route non trouvée : ${req.method} ${req.originalUrl}`);
   res.status(404).json({ error: "Not found", path: req.path });
 });
 
