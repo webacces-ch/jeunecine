@@ -10,7 +10,7 @@ const getImageUrl = (imageUrl) => {
   // Correction cPanel/prod : utilise la même base que l'API
   const base =
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://leonardwicki.emf-informatique.ch:4000";
+    "https://leonardwicki.emf-informatique.ch:8080";
   return `${base}${imageUrl}`;
 };
 

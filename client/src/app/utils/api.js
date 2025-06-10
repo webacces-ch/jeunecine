@@ -4,8 +4,8 @@ export function getApiUrl(path = "") {
   const base =
     typeof window === "undefined"
       ? process.env.NEXT_PUBLIC_API_URL ||
-        "https://leonardwicki.emf-informatique.ch:4000"
+        "https://leonardwicki.emf-informatique.ch:8080"
       : process.env.NEXT_PUBLIC_API_URL ||
-        "https://leonardwicki.emf-informatique.ch:4000";
+        "https://leonardwicki.emf-informatique.ch:8080";
   return `${base}${path.startsWith("/") ? path : "/" + path}`;
 }

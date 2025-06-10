@@ -67,7 +67,7 @@ const getImageUrl = (coverImage) => {
   // Correction cPanel/prod : utilise la même base que l'API
   const base =
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://leonardwicki.emf-informatique.ch:4000";
+    "https://leonardwicki.emf-informatique.ch:8080";
   return `${base}${
     coverImage.startsWith("/uploads/")
       ? coverImage
@@ -107,7 +107,7 @@ export default async function ActualitePage({ params }) {
   let content = article.content || "";
   const base =
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://leonardwicki.emf-informatique.ch:4000";
+    "https://leonardwicki.emf-informatique.ch:8080";
   content = content.replace(
     /src=["'](\/uploads\/[^"']+)["']/g,
     `src="${base}$1"`

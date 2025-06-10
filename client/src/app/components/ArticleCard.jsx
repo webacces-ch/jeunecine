@@ -6,7 +6,7 @@ export default function ArticleCard({ article }) {
   const getImageUrl = (coverImage) => {
     if (!coverImage) return "/placeholder.png";
     if (coverImage.startsWith("http")) return coverImage;
-    return `https://leonardwicki.emf-informatique.ch:4000${
+    return `https://leonardwicki.emf-informatique.ch:8080${
       coverImage.startsWith("/uploads/")
         ? coverImage
         : "/uploads/articles/" + coverImage

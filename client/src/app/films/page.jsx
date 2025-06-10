@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 const getImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder.png";
   if (imageUrl.startsWith("http")) return imageUrl;
-  return `https://leonardwicki.emf-informatique.ch:4000${imageUrl}`;
+  return `https://leonardwicki.emf-informatique.ch:8080${imageUrl}`;
 };
 
 export default function FilmsListPage() {
@@ -14,7 +14,7 @@ export default function FilmsListPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://leonardwicki.emf-informatique.ch:4000/api/films")
+    fetch("https://leonardwicki.emf-informatique.ch:8080/api/films")
       .then((res) => res.json())
       .then((data) => {
         setFilms(data);

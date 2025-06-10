@@ -3,7 +3,7 @@
 Pour que le frontend Next.js fonctionne correctement en production sur cPanel, il faut définir la variable d’environnement suivante dans le dossier `client/` :
 
 ```
-NEXT_PUBLIC_API_URL=https://leonardwicki.emf-informatique.ch:4000
+NEXT_PUBLIC_API_URL=https://leonardwicki.emf-informatique.ch:8080
 ```
 
 Cela permet au helper `getApiUrl` (utilisé dans tout le code) de générer les bonnes URLs d’API et d’images, que ce soit en local ou en production.
@@ -22,5 +22,5 @@ Cela permet au helper `getApiUrl` (utilisé dans tout le code) de générer les 
 
 **Exemple de déploiement sur cPanel**
 
-- API Express : https://leonardwicki.emf-informatique.ch:4000/api/...
+- API Express : https://leonardwicki.emf-informatique.ch:8080/api/...
 - Frontend Next.js : https://leonardwicki.emf-informatique.ch/jeunecine
