@@ -13,15 +13,19 @@ const filmRoutes = require("./routes/film");
 const userRoutes = require("./routes/user");
 
 const app = express();
-const PORT = process.env.PORT || 4000;
-const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 
+// Configuration du port pour cPanel
+const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || "localhost"; // cPanel peut imposer localhost au lieu de 0.0.0.0
+
+// Configuration CORS mise à jour
 const allowedOrigins = [
   "http://localhost:3000",
   "https://jeunecine.vercel.app",
   "https://leonardwicki.emf-informatique.ch",
-  "https://leonardwicki.emf-informatique.ch:4000",
+  "https://www.leonardwicki.emf-informatique.ch", // Ajouter www si nécessaire
 ];
+
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -30,17 +34,28 @@ app.use(
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
+      console.log("CORS blocked origin:", origin); // Pour debug
       return callback(new Error("Not allowed by CORS: " + origin));
     },
     credentials: true,
   })
 );
+
 app.use(express.json({ limit: "2mb" }));
 
 // Servir les fichiers uploadés statiquement
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// app.use et routes
+// Route de test pour vérifier que le serveur fonctionne
+app.get("/", (req, res) => {
+  res.json({
+    message: "Jeunecine API is running",
+    port: PORT,
+    env: process.env.NODE_ENV || "development",
+  });
+});
+
+// Routes API
 app.use("/api", authRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/sponsors", sponsorRoutes);
@@ -49,9 +64,20 @@ app.use("/api/user", userRoutes);
 
 // 404 handler pour toutes les autres routes
 app.use((req, res) => {
-  res.status(404).json({ error: "Not found" });
+  res.status(404).json({ error: "Not found", path: req.path });
 });
 
-app.listen(PORT, "0.0.0.0", () =>
-  console.log(`Server running on port ${PORT}`)
-);
+// Démarrage du serveur
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on ${HOST}:${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+});
+
+// Gestion des erreurs non capturées
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err);
+});
