@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import { getApiUrl } from "../utils/api";
 
 export default function Films() {
   const carouselRef = useRef(null);
@@ -9,7 +10,7 @@ export default function Films() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://leonardwicki.emf-informatique.ch:4000/api/films")
+    fetch(getApiUrl("/api/films"))
       .then((res) => res.json())
       .then((data) => {
         setFilms(Array.isArray(data) ? data : []);
@@ -97,7 +98,7 @@ export default function Films() {
                         film.imageUrl
                           ? film.imageUrl.startsWith("http")
                             ? film.imageUrl
-                            : `https://leonardwicki.emf-informatique.ch:4000${film.imageUrl}`
+                            : getApiUrl(film.imageUrl)
                           : "/placeholder.png"
                       }
                       alt={film.title}

@@ -3,14 +3,14 @@
 import { Badge, Button } from "@relume_io/relume-ui";
 import React, { useEffect, useState } from "react";
 import { RxChevronRight } from "react-icons/rx";
+import { getApiUrl } from "../utils/api";
 
 export function Blog34() {
   const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Utilise la route publique (à adapter selon ton backend)
-    fetch("https://leonardwicki.emf-informatique.ch:4000/api/articles")
+    fetch(getApiUrl("/api/articles"))
       .then((res) => res.json())
       .then((data) => {
         const published = (data || [])
@@ -30,11 +30,11 @@ export function Blog34() {
   const getImageUrl = (coverImage) => {
     if (!coverImage) return "/placeholder.png"; // Utilise un placeholder local pour éviter le CORS
     if (coverImage.startsWith("http")) return coverImage;
-    return `https://leonardwicki.emf-informatique.ch:4000${
+    return getApiUrl(
       coverImage.startsWith("/uploads/")
         ? coverImage
         : "/uploads/articles/" + coverImage
-    }`;
+    );
   };
 
   // Utilitaire pour extraire un extrait du contenu (premières phrases ou 180 caractères)
