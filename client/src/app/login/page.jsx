@@ -28,7 +28,7 @@ export default function LoginPage() {
     toast.dismiss();
     toast.loading("Connexion en cours...");
     try {
-      const res = await fetch(getApiUrl("/api/login"), {
+      const res = await fetch(getApiUrl("/api/user"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
