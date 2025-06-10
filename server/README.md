@@ -49,7 +49,7 @@ Réponse :
 
 ## Sécurité
 
-- Les mots de passe sont hashés avec bcrypt.
+- Les mots de passe sont hashés avec bcryptjs.
 - Les tokens JWT expirent après 2h.
 - Le secret JWT est à configurer dans `.env`.
 
@@ -66,6 +66,6 @@ node index.js
 - cors
 - body-parser
 - jsonwebtoken
-- bcrypt
+- bcryptjs
 - sqlite3
 - dotenv

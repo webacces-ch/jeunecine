@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcryptjs = require("bcryptjs");
 require("dotenv").config();
 
 const authRoutes = require("./routes/auth");
@@ -15,7 +15,7 @@ const userRoutes = require("./routes/user");
 const app = express();
 
 // Configuration du port pour cPanel
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 const HOST = process.env.HOST || "localhost"; // cPanel peut imposer localhost au lieu de 0.0.0.0
 
 // Configuration CORS mise à jour
