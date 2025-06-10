@@ -73,7 +73,7 @@ const Navbar = () => {
                         </svg>
                       </button>
                       <div
-                        className={`absolute left-0 w-24 rounded-lg bg-[#ecedf6]/20 backdrop:filter backdrop-blur-2xl transition-all duration-200 origin-top scale-y-0 opacity-0 pointer-events-none group-hover:scale-y-100 group-hover:opacity-100 group-hover:pointer-events-auto ${
+                        className={`absolute left-0 w-24 rounded-lg bg-white/20 backdrop:filter backdrop-blur-2xl transition-all duration-200 origin-top scale-y-0 opacity-0 pointer-events-none group-hover:scale-y-100 group-hover:opacity-100 group-hover:pointer-events-auto ${
                           openSubmenu === item.name
                             ? "scale-y-100 opacity-100 pointer-events-auto"
                             : ""
@@ -162,7 +162,7 @@ const Navbar = () => {
           {/* Mobile Navigation - Dropdown attached to navbar */}
           {isMenuOpen && (
             <div className="md:hidden absolute left-0 top-full w-full z-[1000] animate-slide-down">
-              <div className="bg-[#ecedf6] shadow-2xl p-6 flex flex-col items-center gap-4">
+              <div className="bg-white shadow-2xl p-6 flex flex-col items-center gap-4">
                 <ul className="flex flex-col gap-2 w-full mt-2">
                   {navItems.map((item) => (
                     <li key={item.name} className="w-full">
