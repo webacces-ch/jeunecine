@@ -56,11 +56,11 @@ app.get("/", (req, res) => {
 });
 
 // Routes API
-app.use("/api", authRoutes);
-app.use("/api/articles", articleRoutes);
-app.use("/api/sponsors", sponsorRoutes);
-app.use("/api/films", filmRoutes);
-app.use("/api/user", userRoutes);
+app.use("/", authRoutes);
+app.use("/articles", articleRoutes);
+app.use("/sponsors", sponsorRoutes);
+app.use("/films", filmRoutes);
+app.use("/user", userRoutes);
 
 // 404 handler pour toutes les autres routes
 app.use((req, res) => {
