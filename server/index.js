@@ -18,7 +18,12 @@ const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // l’URL de ton front
+    origin: [
+      "http://localhost:3000",
+      "https://jeunecine.vercel.app",
+      "https://leonardwicki.emf-informatique.ch",
+      "https://leonardwicki.emf-informatique.ch:4000",
+    ],
     credentials: true,
   })
 );
