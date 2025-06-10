@@ -46,7 +46,6 @@ app.use("/api/articles", articleRoutes);
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/films", filmRoutes);
 app.use("/api/user", userRoutes);
-app.options("/api/*", cors());
 
 // 404 handler pour toutes les autres routes
 app.use((req, res) => {

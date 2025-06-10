@@ -424,9 +424,11 @@ export default function FilmsPage() {
                         {film.imageUrl && (
                           <img
                             src={
-                              film.imageUrl.startsWith("http")
+                              film.imageUrl && film.imageUrl.startsWith("http")
                                 ? film.imageUrl
-                                : `http://localhost:4000${film.imageUrl}`
+                                : film.imageUrl
+                                ? getApiUrl(film.imageUrl)
+                                : "/placeholder.png"
                             }
                             alt="affiche"
                             className="h-12 max-w-[120px] object-contain rounded bg-neutral-100 border border-[#C5C5C5]"
