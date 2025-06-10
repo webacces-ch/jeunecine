@@ -15,7 +15,7 @@ export default function BetterImageDropzone({
     ? URL.createObjectURL(file)
     : typeof value === "string"
     ? value.startsWith("/uploads/")
-      ? `http://localhost:4000${value}`
+      ? `https://leonardwicki.emf-informatique.ch:4000${value}`
       : value
     : null;
 

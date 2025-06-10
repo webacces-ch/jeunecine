@@ -10,7 +10,7 @@ export function Blog34() {
 
   useEffect(() => {
     // Utilise la route publique (à adapter selon ton backend)
-    fetch("http://localhost:4000/api/articles")
+    fetch("https://leonardwicki.emf-informatique.ch:4000/api/articles")
       .then((res) => res.json())
       .then((data) => {
         const published = (data || [])
@@ -30,7 +30,7 @@ export function Blog34() {
   const getImageUrl = (coverImage) => {
     if (!coverImage) return "/placeholder.png"; // Utilise un placeholder local pour éviter le CORS
     if (coverImage.startsWith("http")) return coverImage;
-    return `http://localhost:4000${
+    return `https://leonardwicki.emf-informatique.ch:4000${
       coverImage.startsWith("/uploads/")
         ? coverImage
         : "/uploads/articles/" + coverImage

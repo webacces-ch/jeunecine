@@ -140,15 +140,18 @@ function ImageButton({ editor }) {
     const formData = new FormData();
     formData.append("image", file);
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:4000/api/articles/upload-image", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
+    const res = await fetch(
+      "https://leonardwicki.emf-informatique.ch:4000/api/articles/upload-image",
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      }
+    );
     if (res.ok) {
       const data = await res.json();
       // Insère l'URL absolue pour l'aperçu (dev)
-      const backendUrl = "http://localhost:4000";
+      const backendUrl = "https://leonardwicki.emf-informatique.ch:4000";
       editor
         .chain()
         .focus()
@@ -352,14 +355,14 @@ export function ArticleEditor({ article, mode, onSave }) {
     // eslint-disable-next-line
   }, [article?.content]);
 
-  // Correction : lors de l'affichage, si une image commence par /uploads, on préfixe avec http://localhost:4000
+  // Correction : lors de l'affichage, si une image commence par /uploads, on préfixe avec https://leonardwicki.emf-informatique.ch:4000
   useEffect(() => {
     if (editor && article?.content) {
       // Remplace les src d'image relatifs par des URLs absolues pour l'aperçu
       let content = article.content;
       content = content.replace(
         /src=["'](\/uploads\/[^"']+)["']/g,
-        'src="http://localhost:4000$1"'
+        'src="https://leonardwicki.emf-informatique.ch:4000$1"'
       );
       editor.commands.setContent(content);
     }
@@ -445,7 +448,7 @@ export function ArticleEditor({ article, mode, onSave }) {
       const formData = new FormData();
       formData.append("image", coverImageFile);
       const res = await fetch(
-        "http://localhost:4000/api/articles/upload-image",
+        "https://leonardwicki.emf-informatique.ch:4000/api/articles/upload-image",
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
@@ -471,7 +474,7 @@ export function ArticleEditor({ article, mode, onSave }) {
       tags,
       summary,
     };
-    let url = "http://localhost:4000/api/articles";
+    let url = "https://leonardwicki.emf-informatique.ch:4000/api/articles";
     let method = "POST";
     if (mode === "edit" && article?.id) {
       url += `/${article.id}`;

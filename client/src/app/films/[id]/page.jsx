@@ -8,7 +8,9 @@ const getImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder.png";
   if (imageUrl.startsWith("http")) return imageUrl;
   // Correction cPanel/prod : utilise la même base que l'API
-  const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  const base =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://leonardwicki.emf-informatique.ch:4000";
   return `${base}${imageUrl}`;
 };
 

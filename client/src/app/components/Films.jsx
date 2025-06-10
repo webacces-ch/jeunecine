@@ -9,7 +9,7 @@ export default function Films() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/films")
+    fetch("https://leonardwicki.emf-informatique.ch:4000/api/films")
       .then((res) => res.json())
       .then((data) => {
         setFilms(Array.isArray(data) ? data : []);
@@ -97,7 +97,7 @@ export default function Films() {
                         film.imageUrl
                           ? film.imageUrl.startsWith("http")
                             ? film.imageUrl
-                            : `http://localhost:4000${film.imageUrl}`
+                            : `https://leonardwicki.emf-informatique.ch:4000${film.imageUrl}`
                           : "/placeholder.png"
                       }
                       alt={film.title}

@@ -65,7 +65,9 @@ const getImageUrl = (coverImage) => {
   if (!coverImage) return "/placeholder.png";
   if (coverImage.startsWith("http")) return coverImage;
   // Correction cPanel/prod : utilise la même base que l'API
-  const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  const base =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://leonardwicki.emf-informatique.ch:4000";
   return `${base}${
     coverImage.startsWith("/uploads/")
       ? coverImage
@@ -103,7 +105,9 @@ export default async function ActualitePage({ params }) {
 
   // Patch images dans le contenu (pour affichage correct)
   let content = article.content || "";
-  const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  const base =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://leonardwicki.emf-informatique.ch:4000";
   content = content.replace(
     /src=["'](\/uploads\/[^"']+)["']/g,
     `src="${base}$1"`
