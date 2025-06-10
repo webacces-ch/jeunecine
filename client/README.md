@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Configuration de l’URL de l’API pour la production (cPanel)
 
-## Getting Started
+Pour que le frontend Next.js fonctionne correctement en production sur cPanel, il faut définir la variable d’environnement suivante dans le dossier `client/` :
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+NEXT_PUBLIC_API_URL=https://leonardwicki.emf-informatique.ch:4000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Cela permet au helper `getApiUrl` (utilisé dans tout le code) de générer les bonnes URLs d’API et d’images, que ce soit en local ou en production.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+**Ne jamais utiliser d’URL localhost en dur dans le code.**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Résumé technique
 
-To learn more about Next.js, take a look at the following resources:
+- Utilisez toujours `getApiUrl('/api/xxx')` pour accéder à l’API Express.
+- Pour les images uploadées, utilisez la même base d’URL (`NEXT_PUBLIC_API_URL`).
+- Le `basePath` et `assetPrefix` sont déjà configurés dans `next.config.mjs` pour `/jeunecine`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Exemple de déploiement sur cPanel**
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- API Express : https://leonardwicki.emf-informatique.ch:4000/api/...
+- Frontend Next.js : https://leonardwicki.emf-informatique.ch/jeunecine

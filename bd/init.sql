@@ -27,5 +27,6 @@ CREATE TABLE IF NOT EXISTS films (
   director VARCHAR(255),
   year INT,
   description TEXT,
-  imageUrl VARCHAR(512)
+  imageUrl VARCHAR(512),
+  videoUrl VARCHAR(512)
 );

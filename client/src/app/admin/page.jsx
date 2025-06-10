@@ -17,6 +17,7 @@ import { Loader2 } from "lucide-react";
 import SponsorPage from "./SponsorPage";
 import FilmsPage from "./FilmsPage";
 import ProfilePage from "./ProfilePage";
+import { getApiUrl } from "../utils/api";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -41,12 +42,12 @@ export default function AdminPage() {
       router.replace("/login");
       return;
     }
-    fetch("http://localhost:4000/api/protected", {
+    fetch(getApiUrl("/api/protected"), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (!res.ok) throw new Error();
-        return fetch("http://localhost:4000/api/articles", {
+        return fetch(getApiUrl("/api/articles"), {
           headers: { Authorization: `Bearer ${token}` },
         });
       })
@@ -75,7 +76,7 @@ export default function AdminPage() {
     } else {
       const token = localStorage.getItem("token");
       if (token) {
-        fetch("http://localhost:4000/api/user/me", {
+        fetch(getApiUrl("/api/user/me"), {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then((res) => res.json())
@@ -113,7 +114,7 @@ export default function AdminPage() {
       icon: "🗑️",
       style: { borderRadius: "10px", background: "#222", color: "#fff" },
     });
-    const res = await fetch(`http://localhost:4000/api/articles/${id}`, {
+    const res = await fetch(getApiUrl(`/api/articles/${id}`), {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -141,7 +142,7 @@ export default function AdminPage() {
       style: { borderRadius: "10px", background: "#222", color: "#fff" },
     });
     const updated = { ...art, status: "published", date: formatDate(art.date) };
-    const res = await fetch(`http://localhost:4000/api/articles/${id}`, {
+    const res = await fetch(getApiUrl(`/api/articles/${id}`), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -538,7 +539,7 @@ export default function AdminPage() {
                       setMode("list");
                       // Recharge les articles après création/édition
                       const token = localStorage.getItem("token");
-                      fetch("http://localhost:4000/api/articles", {
+                      fetch(getApiUrl("/api/articles"), {
                         headers: { Authorization: `Bearer ${token}` },
                       })
                         .then((res) => res.json())

@@ -1,12 +1,14 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { getApiUrl } from "../utils/api";
 
 export default function SponsorPublicPage() {
   const [sponsors, setSponsors] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/sponsors")
+    // Correction cPanel/prod : utilisation de getApiUrl pour l'URL de l'API
+    fetch(getApiUrl("/api/sponsors"))
       .then((res) => res.json())
       .then((data) => setSponsors(data))
       .catch(() => setSponsors([]));

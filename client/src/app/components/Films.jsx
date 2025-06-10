@@ -12,7 +12,7 @@ export default function Films() {
     fetch("http://localhost:4000/api/films")
       .then((res) => res.json())
       .then((data) => {
-        setFilms(data);
+        setFilms(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(() => {
@@ -82,6 +82,7 @@ export default function Films() {
                 Aucun film
               </div>
             ) : (
+              Array.isArray(films) &&
               films.map((film, idx) => (
                 <Link
                   key={film.id}
@@ -119,8 +120,6 @@ export default function Films() {
               ))
             )}
           </div>
-          {/* Dégradé de fondu à droite */}
-          <div className="pointer-events-none absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-[#ecedf6] to-transparent" />
         </div>
 
         {/* Bouton "Tous les films" */}

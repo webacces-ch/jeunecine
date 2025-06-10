@@ -3,15 +3,22 @@ const Article = require("../models/article");
 
 exports.getAll = (req, res) => {
   Article.getAll((err, rows) => {
-    if (err) return res.status(500).json({ error: "Erreur serveur" });
+    if (err) {
+      console.error("Erreur dans getAll articles:", err);
+      return res.status(500).json({ error: "Erreur serveur" });
+    }
+    console.log("Articles récupérés:", rows?.length);
     res.json(rows);
   });
 };
 
 exports.getById = (req, res) => {
   Article.getById(req.params.id, (err, row) => {
-    if (err || !row)
+    if (err || !row) {
+      console.error("Erreur dans getById article:", err, req.params.id);
       return res.status(404).json({ error: "Article non trouvé" });
+    }
+    console.log("Article récupéré:", row?.id);
     res.json(row);
   });
 };
@@ -19,23 +26,31 @@ exports.getById = (req, res) => {
 exports.create = (req, res) => {
   const { title, content, date, author, status, coverImage, tags, summary } =
     req.body;
-  if (!title || !content || !date || !author || !status)
+  console.log("Requête création article:", req.body);
+  if (!title || !content || !date || !author || !status) {
+    console.error("Champs manquants pour création article:", req.body);
     return res.status(400).json({ error: "Champs manquants" });
+  }
   Article.create(
     { title, content, date, author, status, coverImage, tags, summary },
     (err, id) => {
-      if (err) return res.status(500).json({ error: "Erreur création" });
-      res.status(201).json({
-        id,
-        title,
-        content,
-        date,
-        author,
-        status,
-        coverImage,
-        tags,
-        summary,
-      });
+      if (err) {
+        console.error("Erreur création article:", err);
+        return res.status(500).json({ error: "Erreur création" });
+      }
+      res
+        .status(201)
+        .json({
+          id,
+          title,
+          content,
+          date,
+          author,
+          status,
+          coverImage,
+          tags,
+          summary,
+        });
     }
   );
 };
@@ -43,7 +58,6 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
   const { title, content, date, author, status, coverImage, tags, summary } =
     req.body;
-  // Log des données reçues pour debug
   console.log("Données reçues pour update article:", {
     title,
     content,
@@ -51,6 +65,7 @@ exports.update = (req, res) => {
     author,
     status,
     coverImage,
+    tags,
     summary,
     id: req.params.id,
   });
@@ -58,7 +73,10 @@ exports.update = (req, res) => {
     req.params.id,
     { title, content, date, author, status, coverImage, tags, summary },
     (err) => {
-      if (err) return res.status(500).json({ error: "Erreur MAJ" });
+      if (err) {
+        console.error("Erreur update article:", err);
+        return res.status(500).json({ error: "Erreur MAJ" });
+      }
       res.json({
         id: req.params.id,
         title,
@@ -75,8 +93,12 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
+  console.log("Suppression article id:", req.params.id);
   Article.delete(req.params.id, (err) => {
-    if (err) return res.status(500).json({ error: "Erreur suppression" });
+    if (err) {
+      console.error("Erreur suppression article:", err);
+      return res.status(500).json({ error: "Erreur suppression" });
+    }
     res.json({ success: true });
   });
 };
@@ -84,7 +106,11 @@ exports.delete = (req, res) => {
 // Récupère uniquement les articles publiés (public)
 exports.getPublished = (req, res) => {
   Article.getPublished((err, rows) => {
-    if (err) return res.status(500).json({ error: "Erreur serveur" });
+    if (err) {
+      console.error("Erreur getPublished articles:", err);
+      return res.status(500).json({ error: "Erreur serveur" });
+    }
+    console.log("Articles publiés récupérés:", rows?.length);
     res.json(rows);
   });
 };

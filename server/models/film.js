@@ -8,7 +8,8 @@ const filmTableSql = `CREATE TABLE IF NOT EXISTS films (
   subtitle VARCHAR(255),
   youtube VARCHAR(255),
   description TEXT,
-  imageUrl VARCHAR(512)
+  imageUrl VARCHAR(512),
+  videoUrl VARCHAR(255)
 )`;
 
 db.query(filmTableSql, (err) => {
@@ -27,26 +28,28 @@ const Film = {
   },
   create: (film, cb) => {
     db.query(
-      "INSERT INTO films (title, subtitle, youtube, description, imageUrl) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO films (title, subtitle, youtube, description, imageUrl, videoUrl) VALUES (?, ?, ?, ?, ?, ?)",
       [
         film.title,
         film.subtitle,
         film.youtube,
         film.description,
         film.imageUrl,
+        film.videoUrl,
       ],
       (err, result) => cb(err, result ? result.insertId : null)
     );
   },
   update: (id, film, cb) => {
     db.query(
-      "UPDATE films SET title = ?, subtitle = ?, youtube = ?, description = ?, imageUrl = ? WHERE id = ?",
+      "UPDATE films SET title = ?, subtitle = ?, youtube = ?, description = ?, imageUrl = ?, videoUrl = ? WHERE id = ?",
       [
         film.title,
         film.subtitle,
         film.youtube,
         film.description,
         film.imageUrl,
+        film.videoUrl,
         id,
       ],
       (err) => cb(err)

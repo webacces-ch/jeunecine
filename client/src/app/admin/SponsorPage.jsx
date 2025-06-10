@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { ImageUp } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getApiUrl } from "../utils/api";
 
 export default function SponsorPage() {
   const router = useRouter();
@@ -47,12 +48,12 @@ export default function SponsorPage() {
       router.replace("/login");
       return;
     }
-    fetch("http://localhost:4000/api/protected", {
+    fetch(getApiUrl("/api/protected"), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (!res.ok) throw new Error();
-        return fetch("http://localhost:4000/api/sponsors", {
+        return fetch(getApiUrl("/api/sponsors"), {
           headers: { Authorization: `Bearer ${token}` },
         });
       })
@@ -134,7 +135,7 @@ export default function SponsorPage() {
       // Ajoute https:// devant le lien
       formData.append("link", "https://" + sponsorLink);
 
-      const res = await fetch("http://localhost:4000/api/sponsors", {
+      const res = await fetch(getApiUrl("/api/sponsors"), {
         method: "POST",
         body: formData,
         headers: { Authorization: `Bearer ${token}` },
@@ -178,7 +179,7 @@ export default function SponsorPage() {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:4000/api/sponsors/${id}`, {
+      const res = await fetch(getApiUrl(`/api/sponsors/${id}`), {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

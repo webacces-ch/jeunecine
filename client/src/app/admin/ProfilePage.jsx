@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { getApiUrl } from "../utils/api";
 
 export default function ProfilePage({ onClose, onUpdate }) {
   const router = useRouter();
@@ -18,12 +19,12 @@ export default function ProfilePage({ onClose, onUpdate }) {
       router.replace("/login");
       return;
     }
-    fetch("http://localhost:4000/api/protected", {
+    fetch(getApiUrl("/api/protected"), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (!res.ok) throw new Error();
-        return fetch("http://localhost:4000/api/user/me", {
+        return fetch(getApiUrl("/api/user/me"), {
           headers: { Authorization: `Bearer ${token}` },
         });
       })
@@ -47,7 +48,7 @@ export default function ProfilePage({ onClose, onUpdate }) {
     setError("");
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch("http://localhost:4000/api/user/me", {
+      const res = await fetch(getApiUrl("/api/user/me"), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

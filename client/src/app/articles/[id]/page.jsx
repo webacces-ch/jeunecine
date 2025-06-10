@@ -1,9 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
 import Navbar from "../../components/Navbar";
+import Link from "next/link";
+import { getApiUrl } from "../../utils/api";
 
 const TAILWIND_COLORS = [
   { bg: "bg-blue-100", text: "text-blue-800" },
@@ -68,50 +65,29 @@ const formatDate = (dateStr) => {
 const getImageUrl = (coverImage) => {
   if (!coverImage) return "/placeholder.png";
   if (coverImage.startsWith("http")) return coverImage;
-  return `http://localhost:4000${
+  // Correction cPanel/prod : utilise la même base que l'API
+  const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  return `${base}${
     coverImage.startsWith("/uploads/")
       ? coverImage
       : "/uploads/articles/" + coverImage
   }`;
 };
 
-export default function ArticlePage() {
-  const { id } = useParams();
-  const [article, setArticle] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-
-  useEffect(() => {
-    if (!id) return;
-    setLoading(true);
-    fetch(`http://localhost:4000/api/articles/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then((data) => {
-        setArticle(data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setNotFound(true);
-        setLoading(false);
-      });
-  }, [id]);
-
-  if (loading) {
-    return (
-      <div className="max-w-3xl mx-auto py-20 animate-pulse">
-        <div className="h-64 bg-gray-200 rounded-2xl mb-8" />
-        <div className="h-8 w-2/3 bg-gray-200 rounded mb-4" />
-        <div className="h-4 w-1/3 bg-gray-200 rounded mb-2" />
-        <div className="h-4 w-1/4 bg-gray-200 rounded mb-6" />
-        <div className="h-4 w-full bg-gray-200 rounded mb-2" />
-        <div className="h-4 w-5/6 bg-gray-200 rounded mb-2" />
-        <div className="h-4 w-2/3 bg-gray-200 rounded mb-2" />
-      </div>
-    );
+export default async function ArticlePage({ params }) {
+  const { id } = params;
+  let article = null;
+  let notFound = false;
+  try {
+    const res = await fetch(getApiUrl(`/api/articles/${id}`), {
+      cache: "force-cache",
+    });
+    if (!res.ok) throw new Error();
+    article = await res.json();
+  } catch {
+    notFound = true;
   }
+
   if (notFound || !article) {
     return (
       <div className="max-w-2xl mx-auto py-20 text-center text-gray-500">
@@ -128,9 +104,10 @@ export default function ArticlePage() {
 
   // Patch images dans le contenu (pour affichage correct)
   let content = article.content || "";
+  const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
   content = content.replace(
     /src=["'](\/uploads\/[^"']+)["']/g,
-    'src="http://localhost:4000$1"'
+    `src="${base}$1"`
   );
 
   return (

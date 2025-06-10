@@ -60,7 +60,7 @@ const uploadFilms = multer({
   },
 });
 
-// Ajout d'un export pour l'upload d'images d'articles (dossier séparé)
+// Ajout d'un export pour l'upload d'articles (images)
 const uploadsArticlesDir = path.join(__dirname, "../uploads/articles");
 if (!fs.existsSync(uploadsArticlesDir)) {
   fs.mkdirSync(uploadsArticlesDir, { recursive: true });
@@ -80,10 +80,57 @@ const uploadArticles = multer({
   storage: storageArticles,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB max
+    fileSize: 10 * 1024 * 1024, // 10MB max
   },
 });
 
-module.exports = upload;
-module.exports.uploadFilms = uploadFilms;
-module.exports.uploadArticles = uploadArticles;
+// Ajout d'un export pour l'upload de vidéos de films (dossier séparé)
+const uploadsFilmsVideoDir = path.join(__dirname, "../uploads/films");
+if (!fs.existsSync(uploadsFilmsVideoDir)) {
+  fs.mkdirSync(uploadsFilmsVideoDir, { recursive: true });
+}
+
+const storageFilmsVideo = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsFilmsVideoDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, "filmvideo-" + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const fileFilterVideo = (req, file, cb) => {
+  if (file.mimetype.startsWith("video/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Seuls les fichiers vidéo sont autorisés!"), false);
+  }
+};
+
+const uploadFilmsVideo = multer({
+  storage: storageFilmsVideo,
+  fileFilter: fileFilterVideo,
+  limits: {
+    fileSize: 10 * 1024 * 1024 * 1024, // 10Go max
+  },
+}).single("video");
+
+// Middleware de log d'erreur pour l'upload vidéo
+function logUploadVideoError(err, req, res, next) {
+  if (err) {
+    console.error("[UPLOAD FILM VIDEO]", err);
+    return res
+      .status(500)
+      .json({ error: err.message || "Erreur upload vidéo" });
+  }
+  next();
+}
+
+module.exports = {
+  upload,
+  uploadFilms,
+  uploadFilmsVideo,
+  uploadArticles,
+  logUploadVideoError,
+};

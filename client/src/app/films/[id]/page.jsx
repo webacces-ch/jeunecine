@@ -1,57 +1,36 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
+export const dynamicParams = false;
+
 import Navbar from "../../components/Navbar";
+import Link from "next/link";
+import { getApiUrl } from "../../utils/api";
 
 const getImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder.png";
   if (imageUrl.startsWith("http")) return imageUrl;
-  return `http://localhost:4000${imageUrl}`;
+  // Correction cPanel/prod : utilise la même base que l'API
+  const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  return `${base}${imageUrl}`;
 };
 
-export default function FilmPage() {
-  const { id } = useParams();
-  const [film, setFilm] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-
-  useEffect(() => {
-    if (!id) return;
-    setLoading(true);
-    fetch(`http://localhost:4000/api/films/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then((data) => {
-        setFilm(data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setNotFound(true);
-        setLoading(false);
-      });
-  }, [id]);
-
-  if (loading) {
-    return (
-      <div className="max-w-3xl mx-auto py-20 animate-pulse">
-        <div className="h-64 bg-gray-200 rounded-2xl mb-8" />
-        <div className="h-8 w-2/3 bg-gray-200 rounded mb-4" />
-        <div className="h-4 w-1/3 bg-gray-200 rounded mb-2" />
-        <div className="h-4 w-1/4 bg-gray-200 rounded mb-6" />
-        <div className="h-4 w-full bg-gray-200 rounded mb-2" />
-        <div className="h-4 w-5/6 bg-gray-200 rounded mb-2" />
-        <div className="h-4 w-2/3 bg-gray-200 rounded mb-2" />
-      </div>
-    );
+export default async function FilmPage({ params }) {
+  const { id } = params;
+  let film = null;
+  let notFound = false;
+  try {
+    const res = await fetch(getApiUrl(`/api/films/${id}`), {
+      cache: "force-cache",
+    });
+    if (!res.ok) throw new Error();
+    film = await res.json();
+  } catch {
+    notFound = true;
   }
+
   if (notFound || !film) {
     return (
       <div className="max-w-2xl mx-auto py-20 text-center text-gray-500">
         <p>Film introuvable.</p>
-        <Link href="/" className="text-blue-600 underline mt-4 inline-block">
+        <Link href="/" className="text-neutral-600 underline mt-4 inline-block">
           Retour à l'accueil
         </Link>
       </div>
@@ -82,28 +61,65 @@ export default function FilmPage() {
               {film.subtitle}
             </div>
           )}
-          <div className="w-full flex justify-center mb-6">
-            <img
-              src={getImageUrl(film.imageUrl)}
-              alt={film.title}
-              className="w-full h-96 object-cover rounded-xl bg-gray-100"
-              style={{ maxHeight: 384 }}
-            />
-          </div>
-          {film.youtube && (
+          {/* Affichage vidéo uploadée si présente */}
+          {film.videoUrl && (
             <div className="w-full flex justify-center mb-6">
-              <iframe
-                width="100%"
-                height="400"
-                src={film.youtube.replace("watch?v=", "embed/")}
-                title={film.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="rounded-xl"
-              ></iframe>
+              <video
+                src={
+                  film.videoUrl.startsWith("http")
+                    ? film.videoUrl
+                    : getImageUrl(film.videoUrl)
+                }
+                controls
+                className="rounded-xl w-full max-h-[480px] bg-black"
+                style={{ maxHeight: 480 }}
+                poster={getImageUrl(film.imageUrl)}
+              >
+                Votre navigateur ne supporte pas la lecture vidéo.
+              </video>
             </div>
           )}
+          {/* Affichage bouton YouTube stylé si le lien est valide */}
+          {film.youtube &&
+            (() => {
+              let videoId = null;
+              const short = film.youtube.match(
+                /youtu\.be\/([A-Za-z0-9_-]{11})/
+              );
+              const classic = film.youtube.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+              if (short) videoId = short[1];
+              else if (classic) videoId = classic[1];
+              if (videoId) {
+                return (
+                  <div className="w-full flex justify-center mb-6">
+                    <a
+                      href={`https://www.youtube.com/watch?v=${videoId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-6 py-3 border border-red-200 hover:border-red-300 hover:bg-red-50 rounded-2xl bg-white font-medium transition-colors duration-200 group"
+                      style={{
+                        textDecoration: "none",
+                        minWidth: 220,
+                        justifyContent: "center",
+                      }}
+                    >
+                      Regarder sur{" "}
+                      <span className="font-bold ml-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-7 h-7 text-red-500 mr-2"
+                        >
+                          <path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.228 3.5 12 3.5 12 3.5s-7.228 0-9.391.569A2.994 2.994 0 0 0 .502 6.186C0 8.36 0 12 0 12s0 3.64.502 5.814a2.994 2.994 0 0 0 2.107 2.117C4.772 20.5 12 20.5 12 20.5s7.228 0 9.391-.569a2.994 2.994 0 0 0 2.107-2.117C24 15.64 24 12 24 12s0-3.64-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
+                      </span>
+                    </a>
+                  </div>
+                );
+              }
+              return null;
+            })()}
           <div
             className="prose prose-neutral text-neutral-700 prose-lg max-w-none w-full mb-2 mx-auto justify-center leading-relaxed font-inter"
             style={{ fontSize: "1rem", maxWidth: "700px", lineHeight: "1.8" }}
