@@ -2,13 +2,14 @@
 import { useEffect, useState } from "react";
 import ArticleCard from "../components/ArticleCard";
 import Navbar from "../components/Navbar";
+import { getApiUrl } from "../utils/api";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/articles")
+    fetch(getApiUrl("/api/articles"))
       .then((res) => res.json())
       .then((data) => {
         const published = (data || [])

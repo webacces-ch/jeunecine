@@ -46,11 +46,13 @@ app.use("/api/articles", articleRoutes);
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/films", filmRoutes);
 app.use("/api/user", userRoutes);
-app.options('/api/*', cors());
+app.options("/api/*", cors());
 
 // 404 handler pour toutes les autres routes
 app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Server running on port ${PORT}`)
+);

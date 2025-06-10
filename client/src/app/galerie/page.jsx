@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import { Footer1 } from "../components/Footer1";
+import { getApiUrl } from "../utils/api";
 
 // Images par catégorie (exemple, à adapter si besoin)
 const galerieData = [
@@ -18,12 +19,12 @@ const galerieData = [
     images: [
       "/assets/maquette4.jpeg",
       "/assets/maquette5.jpeg",
-      "/server/uploads/galerie/galerie-1748952920145-642094128.jpg",
-      "/server/uploads/galerie/galerie-1748953054987-307767614.jpg",
-      "/server/uploads/galerie/galerie-1748953054991-178127858.jpg",
-      "/server/uploads/galerie/galerie-1748953054992-682369208.jpg",
-      "/server/uploads/galerie/galerie-1748953064860-251702638.jpg",
-      "/server/uploads/galerie/galerie-1748953067933-731304804.jpg",
+      "/uploads/galerie/galerie-1748952920145-642094128.jpg",
+      "/uploads/galerie/galerie-1748953054987-307767614.jpg",
+      "/uploads/galerie/galerie-1748953054991-178127858.jpg",
+      "/uploads/galerie/galerie-1748953054992-682369208.jpg",
+      "/uploads/galerie/galerie-1748953064860-251702638.jpg",
+      "/uploads/galerie/galerie-1748953067933-731304804.jpg",
     ],
   },
 ];
@@ -52,11 +53,7 @@ export default function GaleriePage() {
                   style={{ aspectRatio: "1/1" }}
                 >
                   <img
-                    src={
-                      img.startsWith("/server/")
-                        ? img.replace("/server", "http://localhost:4000")
-                        : img
-                    }
+                    src={img.startsWith("/uploads/") ? getApiUrl(img) : img}
                     alt={cat.year + "-" + i}
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                     style={{ maxHeight: 160 }}
@@ -98,8 +95,8 @@ export default function GaleriePage() {
             </button>
             <img
               src={
-                modalImg.startsWith("/server/")
-                  ? modalImg.replace("/server", "http://localhost:4000")
+                modalImg.startsWith("/uploads/")
+                  ? getApiUrl(modalImg)
                   : modalImg
               }
               alt="Agrandissement"

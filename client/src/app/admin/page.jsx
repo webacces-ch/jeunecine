@@ -193,11 +193,11 @@ export default function AdminPage() {
                     src={
                       article.coverImage.startsWith("http")
                         ? article.coverImage
-                        : `http://localhost:4000${
+                        : getApiUrl(
                             article.coverImage.startsWith("/uploads/")
                               ? article.coverImage
                               : "/uploads/articles/" + article.coverImage
-                          }`
+                          )
                     }
                     alt="cover"
                     className="h-12 w-20 object-cover rounded border border-neutral-200 bg-neutral-100"
