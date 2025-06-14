@@ -8,7 +8,6 @@ import ListItem from "@tiptap/extension-list-item";
 import { Color } from "@tiptap/extension-color";
 import Image from "@tiptap/extension-image";
 import { getApiUrl } from "../utils/api";
-import BetterImageDropzone from "./ui/BetterImageDropzone";
 useEffect(() => {
   if (editor && article?.content) {
     // Remplace les src d'image relatifs par des URLs absolues pour l'aperçu
