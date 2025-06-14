@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import BetterImageDropzone from "./ui/BetterImageDropzone";
 import { nanoid } from "nanoid";
+import { getApiUrl } from "../utils/api";
 
 const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -448,7 +449,7 @@ export function ArticleEditor({ article, mode, onSave }) {
       const formData = new FormData();
       formData.append("image", coverImageFile);
       const res = await fetch(
-        "https://leonardwicki.emf-informatique.ch:8080/api/articles/upload-image",
+        getApiUrl("/api/articles/upload-image"),
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
@@ -474,10 +475,10 @@ export function ArticleEditor({ article, mode, onSave }) {
       tags,
       summary,
     };
-    let url = "https://leonardwicki.emf-informatique.ch:8080/api/articles";
+    let url = getApiUrl("/api/articles");
     let method = "POST";
     if (mode === "edit" && article?.id) {
-      url += `/${article.id}`;
+      url = getApiUrl(`/api/articles/${article.id}`);
       method = "PUT";
     }
     await toast.promise(
@@ -834,7 +835,7 @@ export function ArticleEditor({ article, mode, onSave }) {
           </span>
           <button
             onClick={() => handleSave("draft")}
-            className="px-5 py-3.5 bg-white rounded-2xl font-semibold hover:bg-neutral-100 border border-black/10 inline-flex justify-center items-center gap-2"
+            className={`px-5 py-3.5 bg-white rounded-2xl font-semibold hover:bg-neutral-100 border border-black/10 inline-flex justify-center items-center gap-2 ${saving ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
             disabled={saving}
           >
             <Folder size={20} />
@@ -842,7 +843,7 @@ export function ArticleEditor({ article, mode, onSave }) {
           </button>
           <button
             onClick={() => handleSave("published")}
-            className="px-5 py-3.5 bg-neutral-900 text-white rounded-2xl font-semibold hover:bg-neutral-800 inline-flex justify-center items-center gap-2"
+            className={`px-5 py-3.5 bg-neutral-900 text-white rounded-2xl font-semibold hover:bg-neutral-800 inline-flex justify-center items-center gap-2 ${saving ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
             disabled={saving}
           >
             <Save size={20} />
