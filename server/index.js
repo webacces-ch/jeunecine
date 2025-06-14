@@ -43,8 +43,23 @@ app.use(
 
 app.use(express.json({ limit: "2mb" }));
 
-// Servir les fichiers uploadés statiquement
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Servir les fichiers uploadés statiquement avec CORS
+app.use(
+  "/uploads",
+  cors({
+    origin: function (origin, callback) {
+      // Autorise les requêtes sans origin (ex: curl, Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      console.log("CORS blocked origin for uploads:", origin); // Pour debug
+      return callback(new Error("Not allowed by CORS: " + origin));
+    },
+    credentials: true,
+  }),
+  express.static(path.join(__dirname, "uploads"))
+);
 
 // Route de test pour vérifier que le serveur fonctionne
 app.get("/", (req, res) => {

@@ -39,6 +39,19 @@ import {
 import BetterImageDropzone from "./ui/BetterImageDropzone";
 import { nanoid } from "nanoid";
 import { getApiUrl } from "../utils/api";
+import { Folder, Type } from "lucide-react";
+import { Keycap as Kbd } from "keycap";
+import { toast } from "react-hot-toast";
+import {
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  FileText,
+  AlertTriangle,
+} from "lucide-react";
+import BetterImageDropzone from "./ui/BetterImageDropzone";
+import { nanoid } from "nanoid";
+import { getApiUrl } from "../utils/api";
 
 const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -141,18 +154,15 @@ function ImageButton({ editor }) {
     const formData = new FormData();
     formData.append("image", file);
     const token = localStorage.getItem("token");
-    const res = await fetch(
-      "https://leonardwicki.emf-informatique.ch:8080/api/articles/upload-image",
-      {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      }
-    );
+    const res = await fetch(getApiUrl("/api/articles/upload-image"), {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
     if (res.ok) {
       const data = await res.json();
       // Insère l'URL absolue pour l'aperçu (dev)
-      const backendUrl = "https://leonardwicki.emf-informatique.ch:8080";
+      const backendUrl = getApiUrl("");
       editor
         .chain()
         .focus()
@@ -448,14 +458,11 @@ export function ArticleEditor({ article, mode, onSave }) {
     if (coverImageFile) {
       const formData = new FormData();
       formData.append("image", coverImageFile);
-      const res = await fetch(
-        getApiUrl("/api/articles/upload-image"),
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        }
-      );
+      const res = await fetch(getApiUrl("/api/articles/upload-image"), {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
       if (res.ok) {
         const data = await res.json();
         coverImageUrl = data.url;
@@ -835,7 +842,9 @@ export function ArticleEditor({ article, mode, onSave }) {
           </span>
           <button
             onClick={() => handleSave("draft")}
-            className={`px-5 py-3.5 bg-white rounded-2xl font-semibold hover:bg-neutral-100 border border-black/10 inline-flex justify-center items-center gap-2 ${saving ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+            className={`px-5 py-3.5 bg-white rounded-2xl font-semibold hover:bg-neutral-100 border border-black/10 inline-flex justify-center items-center gap-2 ${
+              saving ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+            }`}
             disabled={saving}
           >
             <Folder size={20} />
@@ -843,7 +852,9 @@ export function ArticleEditor({ article, mode, onSave }) {
           </button>
           <button
             onClick={() => handleSave("published")}
-            className={`px-5 py-3.5 bg-neutral-900 text-white rounded-2xl font-semibold hover:bg-neutral-800 inline-flex justify-center items-center gap-2 ${saving ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+            className={`px-5 py-3.5 bg-neutral-900 text-white rounded-2xl font-semibold hover:bg-neutral-800 inline-flex justify-center items-center gap-2 ${
+              saving ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+            }`}
             disabled={saving}
           >
             <Save size={20} />
