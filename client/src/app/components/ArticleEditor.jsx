@@ -8,19 +8,6 @@ import ListItem from "@tiptap/extension-list-item";
 import { Color } from "@tiptap/extension-color";
 import Image from "@tiptap/extension-image";
 import { getApiUrl } from "../utils/api";
-useEffect(() => {
-  if (editor && article?.content) {
-    // Remplace les src d'image relatifs par des URLs absolues pour l'aperçu
-    let content = article.content;
-    const backendUrl = getApiUrl("");
-    content = content.replace(
-      /src=["'](\/uploads\/[^"']+)["']/g,
-      `src="${backendUrl}$1"`
-    );
-    editor.commands.setContent(content);
-  }
-}, [editor, article]);
-
 import {
   Bold,
   Italic,
@@ -52,7 +39,6 @@ import {
 } from "lucide-react";
 import BetterImageDropzone from "./ui/BetterImageDropzone";
 import { nanoid } from "nanoid";
-import { getApiUrl } from "../utils/api";
 
 const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
