@@ -55,12 +55,17 @@ app.get("/", (req, res) => {
   });
 });
 
+// Route API de test
+app.get("/api", (req, res) => {
+  res.send("Hello, l'API fonctionne bien.");
+});
+
 // Routes API
-app.use("/", authRoutes);
-app.use("/articles", articleRoutes);
-app.use("/sponsors", sponsorRoutes);
-app.use("/films", filmRoutes);
-app.use("/user", userRoutes);
+app.use("/api", authRoutes);
+app.use("/api/articles", articleRoutes);
+app.use("/api/sponsors", sponsorRoutes);
+app.use("/api/films", filmRoutes);
+app.use("/api/user", userRoutes);
 
 // 404 handler pour toutes les autres routes
 app.use((req, res) => {
@@ -68,7 +73,7 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not found", path: req.path });
 });
 
-// Démarrage du serveur
+// Démarrage du serveur hihi
 app.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || "development"}`);

@@ -192,7 +192,7 @@ export default function FilmsPage() {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8080/api/films/${id}`, {
+      const res = await fetch(getApiUrl(`/api/films/${id}`), {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -288,7 +288,7 @@ export default function FilmsPage() {
             if (film && film.imageUrl) {
               const url = film.imageUrl.startsWith("http")
                 ? film.imageUrl
-                : `http://localhost:8080${film.imageUrl}`;
+                : getApiUrl(film.imageUrl);
               return (
                 <img
                   src={url}
