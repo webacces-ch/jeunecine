@@ -7,6 +7,21 @@ import TextStyle from "@tiptap/extension-text-style";
 import ListItem from "@tiptap/extension-list-item";
 import { Color } from "@tiptap/extension-color";
 import Image from "@tiptap/extension-image";
+import { getApiUrl } from "../utils/api";
+import BetterImageDropzone from "./ui/BetterImageDropzone";
+useEffect(() => {
+  if (editor && article?.content) {
+    // Remplace les src d'image relatifs par des URLs absolues pour l'aperçu
+    let content = article.content;
+    const backendUrl = getApiUrl("");
+    content = content.replace(
+      /src=["'](\/uploads\/[^"']+)["']/g,
+      `src="${backendUrl}$1"`
+    );
+    editor.commands.setContent(content);
+  }
+}, [editor, article]);
+
 import {
   Bold,
   Italic,
@@ -27,19 +42,6 @@ import {
   Folder,
   Type,
 } from "lucide-react";
-import { Keycap as Kbd } from "keycap";
-import { toast } from "react-hot-toast";
-import {
-  CheckCircle2,
-  XCircle,
-  Loader2,
-  FileText,
-  AlertTriangle,
-} from "lucide-react";
-import BetterImageDropzone from "./ui/BetterImageDropzone";
-import { nanoid } from "nanoid";
-import { getApiUrl } from "../utils/api";
-import { Folder, Type } from "lucide-react";
 import { Keycap as Kbd } from "keycap";
 import { toast } from "react-hot-toast";
 import {
@@ -161,7 +163,7 @@ function ImageButton({ editor }) {
     });
     if (res.ok) {
       const data = await res.json();
-      // Insère l'URL absolue pour l'aperçu (dev)
+      // Insère l'URL absolue pour l'aperçu
       const backendUrl = getApiUrl("");
       editor
         .chain()
@@ -366,14 +368,15 @@ export function ArticleEditor({ article, mode, onSave }) {
     // eslint-disable-next-line
   }, [article?.content]);
 
-  // Correction : lors de l'affichage, si une image commence par /uploads, on préfixe avec https://leonardwicki.emf-informatique.ch:8080
+  // Correction : lors de l'affichage, si une image commence par /uploads, on préfixe avec l'URL du backend
   useEffect(() => {
     if (editor && article?.content) {
       // Remplace les src d'image relatifs par des URLs absolues pour l'aperçu
       let content = article.content;
+      const backendUrl = getApiUrl("");
       content = content.replace(
         /src=["'](\/uploads\/[^"']+)["']/g,
-        'src="https://leonardwicki.emf-informatique.ch:8080$1"'
+        `src="${backendUrl}$1"`
       );
       editor.commands.setContent(content);
     }
