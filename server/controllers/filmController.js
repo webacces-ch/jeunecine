@@ -26,8 +26,10 @@ exports.getById = (req, res) => {
 exports.create = (req, res) => {
   const { title, subtitle, youtube, description } = req.body;
   let imageUrl = null;
-  if (req.file) {
-    imageUrl = `/uploads/films/${req.file.filename}`;
+  // Ajout log pour debug upload
+  console.log("Fichiers reçus :", req.files);
+  if (req.files && req.files.image && req.files.image[0]) {
+    imageUrl = `/uploads/films/${req.files.image[0].filename}`;
   } else if (req.body.imageUrl) {
     imageUrl = req.body.imageUrl;
   }
@@ -59,8 +61,10 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
   const { title, subtitle, youtube, description } = req.body;
   let imageUrl = null;
-  if (req.file) {
-    imageUrl = `/uploads/films/${req.file.filename}`;
+  // Ajout log pour debug upload
+  console.log("Fichiers reçus (update) :", req.files);
+  if (req.files && req.files.image && req.files.image[0]) {
+    imageUrl = `/uploads/films/${req.files.image[0].filename}`;
   } else if (req.body.imageUrl) {
     imageUrl = req.body.imageUrl;
   }

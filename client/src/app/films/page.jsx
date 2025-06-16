@@ -6,7 +6,9 @@ import Navbar from "../components/Navbar";
 const getImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder.png";
   if (imageUrl.startsWith("http")) return imageUrl;
-  return `https://leonardwicki.emf-informatique.ch${imageUrl}`;
+  // Utilise le backend Node.js pour servir les images
+  const backend = process.env.NEXT_PUBLIC_API_URL || "https://api.jeunecine.ch";
+  return `${backend}${imageUrl}`;
 };
 
 export default function FilmsListPage() {

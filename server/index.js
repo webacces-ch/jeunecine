@@ -90,9 +90,9 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not found", path: req.path });
 });
 
-// Démarrage du serveur hihi
-app.listen(PORT, HOST, () => {
-  console.log(`Server running on ${HOST}:${PORT}`);
+// Démarrage du serveur compatible Infomaniak
+app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
   console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
 });
 

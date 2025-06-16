@@ -7,11 +7,9 @@ import { getApiUrl } from "../../utils/api";
 const getImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder.png";
   if (imageUrl.startsWith("http")) return imageUrl;
-  // Correction cPanel/prod : utilise la même base que l'API
-  const base =
-    process.env.NEXT_PUBLIC_API_URL ||
-    "https://leonardwicki.emf-informatique.ch";
-  return `${base}${imageUrl}`;
+  // Utilise le backend Node.js pour servir les images
+  const backend = process.env.NEXT_PUBLIC_API_URL || "https://api.jeunecine.ch";
+  return `${backend}${imageUrl}`;
 };
 
 export default async function FilmPage({ params }) {

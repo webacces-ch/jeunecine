@@ -61,7 +61,7 @@ const uploadFilms = multer({
 });
 
 // Ajout d'un export pour l'upload d'articles (images)
-const uploadsArticlesDir = path.join(__dirname, "../uploads/articles");
+const uploadsArticlesDir = "/home/leonardwicki/public_html/uploads/articles"; // <-- adapte tonuser si besoin
 if (!fs.existsSync(uploadsArticlesDir)) {
   fs.mkdirSync(uploadsArticlesDir, { recursive: true });
 }
