@@ -1,6 +1,12 @@
 // API URL helper for SSR/CSR compatibility
 export function getApiUrl(path = "") {
-  // Use NEXT_PUBLIC_API_URL if defined, else fallback to the server URL
+  // En développement, utiliser localhost
+  if (process.env.NODE_ENV === 'development') {
+    const base = typeof window === "undefined" ? "http://localhost:3000" : "";
+    return `${base}${path.startsWith("/") ? path : "/" + path}`;
+  }
+  
+  // En production, utiliser l'URL définie ou le serveur distant
   const base =
     typeof window === "undefined"
       ? process.env.NEXT_PUBLIC_API_URL ||

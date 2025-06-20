@@ -31,7 +31,7 @@ export default function FilmsPage() {
       router.replace("/login");
       return;
     }
-    fetch(getApiUrl("/api/protected"), {
+    fetch(getApiUrl("/api/auth/protected"), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -363,11 +363,10 @@ export default function FilmsPage() {
         </div>
       )}
       <button
-        className={`w-full mb-8 py-3 rounded-xl font-semibold transition ${
-          loading || !title.trim()
-            ? "bg-neutral-400 text-neutral-600 cursor-not-allowed"
-            : "bg-neutral-900 text-white hover:bg-neutral-800"
-        }`}
+        className={`w-full mb-8 py-3 rounded-xl font-semibold transition ${loading || !title.trim()
+          ? "bg-neutral-400 text-neutral-600 cursor-not-allowed"
+          : "bg-neutral-900 text-white hover:bg-neutral-800"
+          }`}
         onClick={handleAddFilm}
         disabled={loading || !title.trim()}
       >
@@ -427,8 +426,8 @@ export default function FilmsPage() {
                               film.imageUrl && film.imageUrl.startsWith("http")
                                 ? film.imageUrl
                                 : film.imageUrl
-                                ? getApiUrl(film.imageUrl)
-                                : "/placeholder.png"
+                                  ? getApiUrl(film.imageUrl)
+                                  : "/placeholder.png"
                             }
                             alt="affiche"
                             className="h-12 max-w-[120px] object-contain rounded bg-neutral-100 border border-[#C5C5C5]"

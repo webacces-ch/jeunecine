@@ -42,7 +42,7 @@ export default function AdminPage() {
       router.replace("/login");
       return;
     }
-    fetch(getApiUrl("/api/protected"), {
+    fetch(getApiUrl("/api/auth/protected"), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {

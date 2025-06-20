@@ -48,7 +48,7 @@ export default function SponsorPage() {
       router.replace("/login");
       return;
     }
-    fetch(getApiUrl("/api/protected"), {
+    fetch(getApiUrl("/api/auth/protected"), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -60,17 +60,9 @@ export default function SponsorPage() {
       .then((res) => {
         if (!res.ok) throw new Error("Erreur lors du chargement des sponsors");
         return res.json();
-      })
-      .then((data) => {
-        // Correction : chaque sponsor doit avoir sp.image = chemin public
-        setSponsors(
-          data.map((sp) => ({
-            ...sp,
-            image: sp.imageUrl?.startsWith("/sponsors/")
-              ? sp.imageUrl
-              : `/sponsors/${sp.imageUrl}`,
-          }))
-        );
+      })      .then((data) => {
+        // Les sponsors arrivent directement avec leur imageUrl correcte
+        setSponsors(data);
       })
       .catch(() => {
         localStorage.removeItem("token");
@@ -112,7 +104,6 @@ export default function SponsorPage() {
     e.preventDefault();
     setIsDragging(false);
   };
-
   const handleAddSponsor = async () => {
     setError("");
     // Valider l'URL
@@ -130,22 +121,47 @@ export default function SponsorPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const formData = new FormData();
-      formData.append("image", sponsorImage);
-      // Ajoute https:// devant le lien
-      formData.append("link", "https://" + sponsorLink);
+      
+      // 1. D'abord uploader l'image
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", sponsorImage);
+      uploadFormData.append("type", "sponsors");
+
+      const uploadRes = await fetch(getApiUrl("/api/upload"), {
+        method: "POST",
+        body: uploadFormData,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!uploadRes.ok) {
+        const uploadError = await uploadRes.json().catch(() => ({}));
+        throw new Error(uploadError.error || "Erreur lors de l'upload de l'image");
+      }
+
+      const uploadResult = await uploadRes.json();
+      
+      // 2. Ensuite créer le sponsor avec l'URL de l'image
+      const sponsorData = {
+        imageUrl: uploadResult.url,
+        link: "https://" + sponsorLink
+      };
 
       const res = await fetch(getApiUrl("/api/sponsors"), {
         method: "POST",
-        body: formData,
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify(sponsorData),
       });
+      
       let sponsor;
       try {
         sponsor = await res.json();
       } catch {
         throw new Error("Réponse du serveur invalide (ajout sponsor)");
       }
+      
       if (!res.ok) {
         throw new Error(
           sponsor && sponsor.error
@@ -153,16 +169,9 @@ export default function SponsorPage() {
             : "Erreur lors de l'ajout du sponsor"
         );
       }
-      // Correction : garantir que sponsor.image est bien l'URL publique
-      setSponsors((s) => [
-        {
-          ...sponsor,
-          image: sponsor.imageUrl?.startsWith("/sponsors/")
-            ? sponsor.imageUrl
-            : `/sponsors/${sponsor.imageUrl}`,
-        },
-        ...s,
-      ]);
+      
+      // Ajouter le sponsor à la liste
+      setSponsors((s) => [sponsor, ...s]);
       setSponsorImage(null);
       setSponsorLink("");
       setLinkError("");
@@ -201,26 +210,23 @@ export default function SponsorPage() {
         Lien vers le sponsor
       </label>
       <div
-        className={`flex mb-2 ${
-          linkError ? "border-red-400" : "border-[#C5C5C5]"
-        }`}
+        className={`flex mb-2 ${linkError ? "border-red-400" : "border-[#C5C5C5]"
+          }`}
       >
         <span
-          className={`inline-flex items-center px-3 rounded-l-lg border border-r-0 ${
-            linkError
-              ? "border-red-400 bg-red-50 text-red-600"
-              : "border-[#C5C5C5] bg-neutral-100"
-          } text-neutral-500 select-none`}
+          className={`inline-flex items-center px-3 rounded-l-lg border border-r-0 ${linkError
+            ? "border-red-400 bg-red-50 text-red-600"
+            : "border-[#C5C5C5] bg-neutral-100"
+            } text-neutral-500 select-none`}
         >
           https://
         </span>
         <input
           type="text"
-          className={`w-full px-4 py-2 border rounded-r-lg focus:outline-none focus:ring-0 transition-colors ${
-            linkError
-              ? "border-red-400 bg-red-50 text-red-600"
-              : "border-[#C5C5C5] bg-neutral-50 text-neutral-900"
-          }`}
+          className={`w-full px-4 py-2 border rounded-r-lg focus:outline-none focus:ring-0 transition-colors ${linkError
+            ? "border-red-400 bg-red-50 text-red-600"
+            : "border-[#C5C5C5] bg-neutral-50 text-neutral-900"
+            }`}
           placeholder="site-du-sponsor.com"
           value={sponsorLink}
           onChange={handleLinkChange}
@@ -237,11 +243,10 @@ export default function SponsorPage() {
         </div>
       )}
       <div
-        className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl mb-4 transition-all duration-500 cursor-pointer ${
-          isDragging
-            ? "border-blue-400 bg-blue-50"
-            : "border-[#C5C5C5] bg-neutral-50"
-        }`}
+        className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl mb-4 transition-all duration-500 cursor-pointer ${isDragging
+          ? "border-blue-400 bg-blue-50"
+          : "border-[#C5C5C5] bg-neutral-50"
+          }`}
         style={{ minHeight: 220 }}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -273,11 +278,10 @@ export default function SponsorPage() {
         )}
       </div>
       <button
-        className={`w-full mb-8 py-3 rounded-xl font-semibold transition ${
-          loading || linkError || !sponsorLink.trim()
-            ? "bg-neutral-400 text-neutral-600 cursor-not-allowed"
-            : "bg-neutral-900 text-white hover:bg-neutral-800"
-        }`}
+        className={`w-full mb-8 py-3 rounded-xl font-semibold transition ${loading || linkError || !sponsorLink.trim()
+          ? "bg-neutral-400 text-neutral-600 cursor-not-allowed"
+          : "bg-neutral-900 text-white hover:bg-neutral-800"
+          }`}
         onClick={handleAddSponsor}
         disabled={loading || !!linkError || !sponsorLink.trim()}
       >
@@ -312,9 +316,8 @@ export default function SponsorPage() {
                         href={sp.link || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
-                      >
-                        <img
-                          src={sp.image}
+                      >                        <img
+                          src={sp.imageUrl}
                           alt="logo"
                           className="h-12 max-w-[120px] object-contain rounded bg-neutral-100 border border-[#C5C5C5]"
                         />

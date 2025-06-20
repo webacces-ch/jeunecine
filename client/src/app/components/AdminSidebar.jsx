@@ -16,9 +16,8 @@ import { toast } from "react-hot-toast";
 export function AdminSidebar({ open, setOpen, tab, setTab, onLogout }) {
   return (
     <aside
-      className={`bg-white shadow-lg h-screen fixed z-30 transition-all duration-300 flex flex-col ${
-        open ? "w-64" : "w-16"
-      }`}
+      className={`bg-white shadow-lg h-screen fixed z-30 transition-all duration-300 flex flex-col ${open ? "w-64" : "w-16"
+        }`}
       style={{ overflow: "hidden" }}
     >
       <div className="flex items-center justify-start p-4 shrink-0">
@@ -35,9 +34,8 @@ export function AdminSidebar({ open, setOpen, tab, setTab, onLogout }) {
         <div className="h-10 flex items-center">
           <button
             onClick={() => (window.location.href = "/")}
-            className={`flex items-center gap-3 px-4 py-2 hover:bg-gray-100 rounded transition text-left w-full h-full ${
-              open ? "" : "justify-center"
-            }`}
+            className={`flex items-center gap-3 px-4 py-2 hover:bg-gray-100 rounded transition text-left w-full h-full ${open ? "" : "justify-center"
+              }`}
           >
             <Home size={20} />
             {open && <span>Revenir au site</span>}
@@ -51,11 +49,10 @@ export function AdminSidebar({ open, setOpen, tab, setTab, onLogout }) {
         <div className="h-10 flex items-center">
           <button
             onClick={() => setTab("drafts")}
-            className={`flex items-center gap-3 px-4 py-2 rounded transition text-left w-full h-full ${
-              tab === "drafts"
-                ? "bg-neutral-100 font-bold"
-                : "hover:bg-gray-100"
-            } ${open ? "" : "justify-center"}`}
+            className={`flex items-center gap-3 px-4 py-2 rounded transition text-left w-full h-full ${tab === "drafts"
+              ? "bg-neutral-100 font-bold"
+              : "hover:bg-gray-100"
+              } ${open ? "" : "justify-center"}`}
           >
             <FileEdit size={20} />
             {open && <span>Brouillons</span>}
@@ -65,11 +62,10 @@ export function AdminSidebar({ open, setOpen, tab, setTab, onLogout }) {
         <div className="h-10 flex items-center">
           <button
             onClick={() => setTab("published")}
-            className={`flex items-center gap-3 px-4 py-2 rounded transition text-left w-full h-full ${
-              tab === "published"
-                ? "bg-neutral-100 font-bold"
-                : "hover:bg-gray-100"
-            } ${open ? "" : "justify-center"}`}
+            className={`flex items-center gap-3 px-4 py-2 rounded transition text-left w-full h-full ${tab === "published"
+              ? "bg-neutral-100 font-bold"
+              : "hover:bg-gray-100"
+              } ${open ? "" : "justify-center"}`}
           >
             <CheckCircle2 size={20} />
             {open && <span>Publiés</span>}
@@ -79,11 +75,10 @@ export function AdminSidebar({ open, setOpen, tab, setTab, onLogout }) {
         <div className="h-10 flex items-center">
           <button
             onClick={() => setTab("sponsor")}
-            className={`flex items-center gap-3 px-4 py-2 rounded transition text-left w-full h-full ${
-              tab === "sponsor"
-                ? "bg-neutral-100 font-bold"
-                : "hover:bg-gray-100"
-            } ${open ? "" : "justify-center"}`}
+            className={`flex items-center gap-3 px-4 py-2 rounded transition text-left w-full h-full ${tab === "sponsor"
+              ? "bg-neutral-100 font-bold"
+              : "hover:bg-gray-100"
+              } ${open ? "" : "justify-center"}`}
           >
             <BadgePercent size={20} />
             {open && <span>Sponsors</span>}
@@ -93,9 +88,8 @@ export function AdminSidebar({ open, setOpen, tab, setTab, onLogout }) {
         <div className="h-10 flex items-center">
           <button
             onClick={() => setTab("films")}
-            className={`flex items-center gap-3 px-4 py-2 rounded transition text-left w-full h-full ${
-              tab === "films" ? "bg-neutral-100 font-bold" : "hover:bg-gray-100"
-            } ${open ? "" : "justify-center"}`}
+            className={`flex items-center gap-3 px-4 py-2 rounded transition text-left w-full h-full ${tab === "films" ? "bg-neutral-100 font-bold" : "hover:bg-gray-100"
+              } ${open ? "" : "justify-center"}`}
           >
             <Clapperboard size={20} />
             {open && <span>Films</span>}
@@ -108,9 +102,8 @@ export function AdminSidebar({ open, setOpen, tab, setTab, onLogout }) {
         <div className="w-full flex justify-center mb-6">
           <div className="h-10 flex items-center w-full">
             <button
-              className={`flex items-center gap-3 px-4 py-2 hover:bg-gray-100 rounded transition text-red-500 w-full h-full ${
-                open ? "" : "justify-center"
-              }`}
+              className={`flex items-center gap-3 px-4 py-2 hover:bg-gray-100 rounded transition text-red-500 w-full h-full ${open ? "" : "justify-center"
+                }`}
               onClick={() => {
                 if (typeof window !== "undefined") {
                   localStorage.removeItem("token");
