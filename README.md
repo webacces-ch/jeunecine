@@ -91,6 +91,10 @@ modification d'un article (gestion du texte) :
 
 ![Maquet2tes4](/assets/articleadmin2.jpeg)
 
+modification du profil admin :
+![Maquet2tes4](/assets/profil.jpeg)
+
+
 Brand book :
 
 ![brand book](/assets/bb.png)
