@@ -11,6 +11,7 @@ const articleRoutes = require("./routes/article");
 const sponsorRoutes = require("./routes/sponsor");
 const filmRoutes = require("./routes/film");
 const userRoutes = require("./routes/user");
+const db = require("./db");
 
 const app = express();
 
@@ -73,6 +74,14 @@ app.get("/", (req, res) => {
 // Route API de test
 app.get("/api", (req, res) => {
   res.send("Hello, l'API fonctionne bien.");
+});
+
+// Health check DB
+app.get("/api/health", (req, res) => {
+  db.healthCheck((err, ok) => {
+    if (err) return res.status(500).json({ status: "error", error: err.code || err.message });
+    res.json({ status: ok ? "ok" : "ko" });
+  });
 });
 
 // Routes API

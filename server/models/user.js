@@ -1,18 +1,6 @@
-// User model for MySQL
-const mysql = require("mysql2");
-
-// connexion MySQL
-const db = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASS || "",
-  database: process.env.DB_NAME || "cine",
-});
-
-db.connect((err) => {
-  if (err) console.error("DB error:", err);
-  else console.log("Connected to MySQL DB (user)");
-});
+// User model (reuse central MySQL connection)
+// We reuse the shared connection defined in ../db to avoid diverging env var names
+const db = require("../db");
 
 // Création de la table users si elle n'existe pas
 const userTableSql = `CREATE TABLE IF NOT EXISTS users (
@@ -25,9 +13,10 @@ db.query(userTableSql, (err) => {
 });
 
 // Ajout du champ name si absent
+// Safe alter to add name column if missing
 const alterUserTableSql = `ALTER TABLE users ADD COLUMN name VARCHAR(255) DEFAULT ''`;
 db.query(alterUserTableSql, (err) => {
-  if (err && !err.message.includes("Duplicate column")) {
+  if (err && !/Duplicate column|ER_DUP_FIELDNAME/.test(err.message)) {
     console.error("Erreur ajout colonne name:", err);
   }
 });

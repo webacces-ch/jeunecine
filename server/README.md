@@ -60,12 +60,57 @@ cd server
 node index.js
 ```
 
-## Dépendances
+## Dépendances principales
 
 - express
 - cors
-- body-parser
 - jsonwebtoken
 - bcryptjs
-- sqlite3
 - dotenv
+- mysql2
+
+## Installation locale rapide
+
+```
+cd server
+cp .env.example .env   # puis éditez si besoin
+npm install
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS cinema CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+node index.js
+```
+
+Ensuite côté client :
+
+```
+cd ../client
+npm install
+npm run dev
+```
+
+Le frontend écoute sur http://localhost:3000 et l'API sur http://localhost:8080.
+
+## Option Docker rapide (MySQL + Adminer)
+
+À la racine du repo :
+
+```
+docker compose up -d db adminer
+```
+
+Puis configure `.env` avec :
+```
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=app
+DB_PASSWORD=app
+DB_NAME=cinema
+```
+
+Adminer dispo sur http://localhost:8081 (serveur: db / user: app / pass: app).
+
+Lance ensuite l'API :
+```
+cd server
+npm install
+npm run dev
+```

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
+import { getApiUrl } from "../utils/api";
 
 const getImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder.png";
@@ -16,7 +17,7 @@ export default function FilmsListPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://leonardwicki.emf-informatique.ch/api/films")
+    fetch(getApiUrl("/api/films"))
       .then((res) => res.json())
       .then((data) => {
         setFilms(data);

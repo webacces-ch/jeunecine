@@ -65,15 +65,10 @@ const formatDate = (dateStr) => {
 const getImageUrl = (coverImage) => {
   if (!coverImage) return "/placeholder.png";
   if (coverImage.startsWith("http")) return coverImage;
-  // Correction cPanel/prod : utilise la même base que l'API
-  const base =
-    process.env.NEXT_PUBLIC_API_URL ||
-    "https://leonardwicki.emf-informatique.ch";
-  return `${base}${
-    coverImage.startsWith("/uploads/")
-      ? coverImage
-      : "/uploads/articles/" + coverImage
-  }`;
+  const rel = coverImage.startsWith("/uploads/")
+    ? coverImage
+    : "/uploads/articles/" + coverImage;
+  return getApiUrl(rel);
 };
 
 export default async function ArticlePage({ params }) {
@@ -106,12 +101,10 @@ export default async function ArticlePage({ params }) {
 
   // Patch images dans le contenu (pour affichage correct)
   let content = article.content || "";
-  const base =
-    process.env.NEXT_PUBLIC_API_URL ||
-    "https://leonardwicki.emf-informatique.ch";
+  const apiBase = getApiUrl("").replace(/\/$/, "");
   content = content.replace(
     /src=["'](\/uploads\/[^"']+)["']/g,
-    `src="${base}$1"`
+    (m, p1) => `src="${apiBase}${p1}"`
   );
 
   return (

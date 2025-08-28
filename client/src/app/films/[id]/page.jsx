@@ -7,9 +7,7 @@ import { getApiUrl } from "../../utils/api";
 const getImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder.png";
   if (imageUrl.startsWith("http")) return imageUrl;
-  // Utilise le backend Node.js pour servir les images
-  const backend = process.env.NEXT_PUBLIC_API_URL || "https://api.jeunecine.ch";
-  return `${backend}${imageUrl}`;
+  return getApiUrl(imageUrl);
 };
 
 export default async function FilmPage({ params }) {

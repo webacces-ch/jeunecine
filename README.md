@@ -34,30 +34,62 @@ le client n'as donc jamais besoin de se connecter à un compte.
 
 ![Diagramme de cas d'utilisation](/assets/usecase.png)
 
-### Maquettes
+### Réalisation
 
 #### landing page
 
 Cette page est la page d'accueil du site. Elle contient une bannière avec le logo de l'association, un menu de navigation, un carrousel d'images et un pied de page.
 
 Header :
-![Maquettes1](/assets/maquette1.jpeg)
+![Maquette](/assets/1.jpeg)
 
 Quiz intéractif :
-![Maquettes2](/assets/maquette2.jpeg)
+![Maquettes2](/assets/2.jpeg)
+
+Les dernières nouvelles :
+![Maquettes3](/assets/3.jpeg)
+
+pages "tout les articles" :
+![6](/assets/6.jpeg)
+
+aperçu d'un article :
+![9h821](/assets/Jeune%20Cin_%20·%206.31pm%20·%2008-28.jpeg)
 
 Les films :
-![Maquettes3](/assets/maquette3.jpeg)
+![Maquette2s4](/assets/films.jpeg)
 
-Les derniers articles :
-![Maquettes4](/assets/maquette4.jpeg)
+aperçu d'un film :
+![Maquette2s4](/assets/apercufilm.jpeg)
 
 Inscription a la newsletter :
-![Maquettes5](/assets/maquette5.jpeg)
+![Maquettes4](/assets/5.jpeg)
+
 
 Footer :
 
 _à compléter_
+
+Panel Admin :
+
+page de connexion :
+![Maquette2s4](/assets/connexion.jpeg)
+
+gestion des brouillons (articles) :
+![Maquett2es4](/assets/admin-brouillons.jpeg)
+
+gestion des publications (articles) :
+![Maquet2tes4](/assets/admin-publi.jpeg)
+
+gestion des sponsors :
+![Maquet2tes4](/assets/sponsor.jpeg)
+
+modification d'un article :
+
+![Maquet2tes4](/assets/articleadmin.jpeg)
+
+modification d'un article (gestion du texte) :
+
+![Maquet2tes4](/assets/articleadmin2.jpeg)
 
 Brand book :
 

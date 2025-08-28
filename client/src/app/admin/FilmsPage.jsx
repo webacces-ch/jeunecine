@@ -312,7 +312,7 @@ export default function FilmsPage() {
         )}
       </div>
       <label className="block mb-2 font-semibold text-neutral-800">
-        Vidéo du film (max 10Go)
+        Vidéo du film
       </label>
       <div
         className={

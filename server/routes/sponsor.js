@@ -1,20 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const Sponsor = require("../models/sponsor");
-const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-
-const upload = multer({
-  dest: path.join(__dirname, "../../client/public/sponsors/"),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 Mo max
-  fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith("image/")) {
-      return cb(new Error("Seules les images sont autorisées"));
-    }
-    cb(null, true);
-  },
-});
+const Sponsor = require("../models/sponsor");
+// Réutilise le middleware générique (stocke dans server/uploads/sponsors)
+const { upload } = require("../middleware/upload");
 
 // GET tous les sponsors
 router.get("/", (req, res) => {
@@ -43,40 +33,29 @@ router.get("/:id", (req, res) => {
 });
 
 // POST créer un nouveau sponsor avec upload d'image
-router.post(
-  "/",
-  upload.single("image"),
-  async (req, res) => {
-    const { link } = req.body;
-    if (!req.file) {
-      return res.status(400).json({ error: "Image requise" });
-    }
-    // Renommer le fichier pour garder l’extension
-    const ext = path.extname(req.file.originalname);
-    const newFilename = `${Date.now()}-${Math.floor(Math.random() * 1e6)}${ext}`;
-    const fs = require("fs");
-    const oldPath = req.file.path;
-    const newPath = path.join(req.file.destination, newFilename);
-    fs.renameSync(oldPath, newPath);
-
-    // Stocker en base
-    const imageUrl = `/sponsors/${newFilename}`;
-
-    Sponsor.create(imageUrl, link || "", (err, insertId) => {
-      if (err) {
-        // Supprimer le fichier si erreur DB
-        fs.unlinkSync(req.file.path);
-        return res.status(500).json({ error: "Erreur création sponsor" });
-      }
-      res.status(201).json({
-        id: insertId,
-        imageUrl,
-        link: link || "",
-        message: "Sponsor créé avec succès",
-      });
-    });
+router.post("/", upload.single("image"), async (req, res) => {
+  const { link } = req.body;
+  if (!req.file) {
+    return res.status(400).json({ error: "Image requise" });
   }
-);
+  // Le middleware nomme déjà sponsor-<unique>.<ext>
+  const imageUrl = `/uploads/sponsors/${req.file.filename}`;
+  Sponsor.create(imageUrl, link || "", (err, insertId) => {
+    if (err) {
+      // Supprime le fichier si erreur DB
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch {}
+      return res.status(500).json({ error: "Erreur création sponsor" });
+    }
+    res.status(201).json({
+      id: insertId,
+      imageUrl,
+      link: link || "",
+      message: "Sponsor créé avec succès",
+    });
+  });
+});
 
 // DELETE supprimer un sponsor
 router.delete("/:id", (req, res) => {
@@ -100,9 +79,10 @@ router.delete("/:id", (req, res) => {
 
       // Supprimer le fichier image du serveur
       if (sponsor.imageUrl) {
-        const imagePath = path.join(__dirname, "../", sponsor.imageUrl);
+        const rel = sponsor.imageUrl.replace(/^\//, "");
+        const imagePath = path.join(__dirname, "..", rel);
         if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
+          try { fs.unlinkSync(imagePath); } catch {}
         }
       }
 

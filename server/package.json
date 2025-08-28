@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "dev:watch": "node --watch index.js",
     "production": "NODE_ENV=production node index.js"
   },
   "dependencies": {
@@ -16,6 +17,9 @@
     "jsonwebtoken": "^9.0.0",
     "multer": "^2.0.1",
     "mysql2": "^3.14.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   },
   "engines": {
     "node": ">=16.0.0"

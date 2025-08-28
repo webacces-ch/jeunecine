@@ -1,16 +1,16 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { getApiUrl } from "../utils/api";
 
 export default function ArticleCard({ article }) {
   const getImageUrl = (coverImage) => {
     if (!coverImage) return "/placeholder.png";
     if (coverImage.startsWith("http")) return coverImage;
-    return `https://leonardwicki.emf-informatique.ch${
-      coverImage.startsWith("/uploads/")
-        ? coverImage
-        : "/uploads/articles/" + coverImage
-    }`;
+    const rel = coverImage.startsWith("/uploads/")
+      ? coverImage
+      : "/uploads/articles/" + coverImage;
+    return getApiUrl(rel);
   };
 
   const getExcerpt = (content) => {
